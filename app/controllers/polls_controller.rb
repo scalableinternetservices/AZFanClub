@@ -8,6 +8,7 @@ class PollsController < ApplicationController
 
   # GET /polls/1 or /polls/1.json
   def show
+    logger.debug "PRINTING ID " + @poll.id
   end
 
   # GET /polls/new
