@@ -20,7 +20,7 @@ class PollsControllerTest < ActionDispatch::IntegrationTest
       post polls_url, params: { poll: { title: @poll.title } }
     end
 
-    assert_redirected_to poll_url(Poll.last)
+    assert_redirected_to poll_url(Poll.order("created_at ASC").last)
   end
 
   test "should show poll" do
