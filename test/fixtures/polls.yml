@@ -1,7 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+poll:
   title: MyString
+  timeframe_start: 1999-01-08 04:05:06
+  timeframe_end: 1999-01-08 04:05:07
 
-two:
-  title: MyString
