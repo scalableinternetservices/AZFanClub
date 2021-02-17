@@ -1,4 +1,4 @@
-<%= fields_for :time_frames do |f| %>
+<%= form_for([@poll, @user, @user.time_frames.build]) do |f| %>
   <div class="field">
     <%= f.label :start_time %><br />
     <%= f.text_field :start_time %>
@@ -6,5 +6,8 @@
   <div class="field">
     <%= f.label :end_time %><br />
     <%= f.text_field :end_time %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
   </div>
 <% end %>

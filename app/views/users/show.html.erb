@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h2>Poll</h2>
+<p>
+  <strong>Title:</strong>
+  <%= @poll.title %>
+</p>
+<p>
+  Start:
+  <%= @poll.timeframe_start%>
+</p>
+<p>
+  End:
+  <%= @poll.timeframe_end%>
+</p>
+
+<h2>User</h2>
+<p>
+  <strong>Name:</strong>
+  <%= @user.name %>
+</p>
+
+<h2>Time Frames</h2>
+<%= render @user.time_frames %>
+
+<h2>Add Time Frame:</h2>
+<%= render "time_frames/form" %>
+
+<%= link_to 'Poll', @poll %>

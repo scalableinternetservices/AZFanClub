@@ -1,17 +1,8 @@
 <p>
   <b>User</b>
-  <%= user.name %>
+  <%= link_to user.name, [@poll, user] %>
   <b>Time frames</b>
   <%= user.time_frames.length %>
-  <% user.time_frames.each do |time_frame| %>
-  <p>
-    <b>Start time:</b>
-    <%= time_frame.start_time %>
-  </p>
- 
-  <p>
-    <b>End time:</b>
-    <%= time_frame.end_time %>
-  </p>
-<% end %>
+  <%= render user.time_frames %>
+
 </p>

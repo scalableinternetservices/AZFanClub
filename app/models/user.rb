@@ -3,5 +3,5 @@ class User < ApplicationRecord
   has_many :time_frames
   validates :name, presence: true
 
-  accepts_nested_attributes_for :time_frames, :allow_destroy => :true
+  # accepts_nested_attributes_for :time_frames, :allow_destroy => :true
 end
