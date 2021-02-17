@@ -4,6 +4,15 @@
   <strong>Title:</strong>
   <%= @poll.title %>
 </p>
+<p>
+  Start:
+  <%= @poll.timeframe_start%>
+</p>
+<p>
+  End:
+  <%= @poll.timeframe_end%>
+</p>
+
 
 <%= link_to 'Edit', edit_poll_path(@poll) %> |
 <%= link_to 'Back', polls_path %>
