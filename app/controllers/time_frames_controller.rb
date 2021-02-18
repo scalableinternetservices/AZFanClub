@@ -1,0 +1,2 @@
+class TimeFramesController < ApplicationController
+end

@@ -1,0 +1,10 @@
+<%= fields_for :time_frames do |f| %>
+  <div class="field">
+    <%= f.label :start_time %><br />
+    <%= f.text_field :start_time %>
+  </div>
+  <div class="field">
+    <%= f.label :end_time %><br />
+    <%= f.text_field :end_time %>
+  </div>
+<% end %>

@@ -3,7 +3,10 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  <%= render 'time_frames/form',
+            :locals => {:form => f} %>
   <div class="actions">
     <%= f.submit %>
   </div>
+
 <% end %>

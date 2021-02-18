@@ -1,4 +1,17 @@
 <p>
   <b>User</b>
   <%= user.name %>
+  <b>Time frames</b>
+  <%= user.time_frames.length %>
+  <% user.time_frames.each do |time_frame| %>
+  <p>
+    <b>Start time:</b>
+    <%= time_frame.start_time %>
+  </p>
+ 
+  <p>
+    <b>End time:</b>
+    <%= time_frame.end_time %>
+  </p>
+<% end %>
 </p>
