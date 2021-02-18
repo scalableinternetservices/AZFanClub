@@ -13,6 +13,11 @@
   <%= @poll.timeframe_end%>
 </p>
 
+<h2>Users</h2>
+<%= render @poll.users %>
+
+<h2>Add user:</h2>
+<%= render "users/form" %>
 
 <%= link_to 'Edit', edit_poll_path(@poll) %> |
 <%= link_to 'Back', polls_path %>
