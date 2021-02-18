@@ -1,4 +1,5 @@
 class Poll < ApplicationRecord
+  has_many :users
   validates :title, presence: true
   validates :timeframe_start, presence: true
   validates :timeframe_end, presence: true
