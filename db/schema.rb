@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_18_204208) do
+ActiveRecord::Schema.define(version: 2021_02_18_215903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,15 @@ ActiveRecord::Schema.define(version: 2021_02_18_204208) do
     t.datetime "timeframe_end"
   end
 
+  create_table "time_frames", force: :cascade do |t|
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_time_frames_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.uuid "poll_id", null: false
@@ -31,5 +40,6 @@ ActiveRecord::Schema.define(version: 2021_02_18_204208) do
     t.index ["poll_id"], name: "index_users_on_poll_id"
   end
 
+  add_foreign_key "time_frames", "users"
   add_foreign_key "users", "polls"
 end

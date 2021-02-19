@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :polls do
-    resources :users
+    resources :users do
+      resources :time_frames
+    end
   end
   get 'index/index'
   root "index#index"
