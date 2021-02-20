@@ -3,6 +3,7 @@ class TimeFrame < ApplicationRecord
   validates :start_time, presence: true
   validates :end_time, presence: true
   validate :validateTimeframe
+  validates :tier, inclusion: { in: 1..3, message: "must be 1, 2, or 3" }
 
   def validateTimeframe
     if start_time.nil? || end_time.nil? || (start_time > end_time)
@@ -15,8 +16,6 @@ class TimeFrame < ApplicationRecord
     if !(poll.timeframe_start <= end_time && end_time <= poll.timeframe_end)
       errors.add(:end_time, "must be inside poll time")
     end
-    #logger.debug "PRINTING POLL" + @poll
-    #logger.debug "Poll object" + .to_s
   end
 
 end
