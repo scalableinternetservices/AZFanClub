@@ -9,7 +9,7 @@ class PollsController < ApplicationController
   # GET /polls/1 or /polls/1.json
   def show
     logger.debug "PRINTING ID " + @poll.id
-    find_optimal_time()
+    find_optimal_times()
   end
 
   # GET /polls/new
@@ -64,7 +64,7 @@ class PollsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_poll
       @poll = Poll.find(params[:id])
-      @optimal_time = nil
+      @optimal_times = []
     end
 
     # Only allow a list of trusted parameters through.
@@ -72,7 +72,7 @@ class PollsController < ApplicationController
       params.require(:poll).permit(:title, :timeframe_start, :timeframe_end)
     end
 
-    def find_optimal_time
+    def find_optimal_times
       users = @poll.users
       increment = 15*60
 
@@ -107,19 +107,23 @@ class PollsController < ApplicationController
       logger.debug "USER COUNTS " + time_slot_user_counts.to_s
 
       max_count = 0
-      min_penalty = (2**(0.size * 8 -2) -1)
-      optimal_time = @poll.timeframe_start 
+      optimal_times = {}
 
       time_slot_user_counts.each do |time_slot, info|
-        if info.count > max_count || (info.count == max_count && info.penalty < min_penalty)
+        if info.count > max_count
+          optimal_times.clear()
           max_count = info.count
-          min_penalty = info.penalty
-          optimal_time = time_slot
+          optimal_times[time_slot] = info.penalty
+        elsif info.count == max_count
+          optimal_times[time_slot] = info.penalty
         end
       end
 
-      logger.debug "OPTIMAL TIME " + optimal_time.to_s
-      @optimal_time = optimal_time.strftime("%F %H:%M:%S %Z")
+      optimal_times = optimal_times.sort_by{|k,v| v}
+      logger.debug "OPTIMAL TIMES " + optimal_times.to_s
+      optimal_times.each do |time_slot, penalty|
+        @optimal_times.append(time_slot.strftime("%F %H:%M:%S %Z"))       
+      end
 
     end
 end
