@@ -1,11 +1,11 @@
 <%= form_for([@poll, @user, @user.time_frames.build]) do |f| %>
   <div class="field">
     <%= f.label :start_time %><br />
-    <%= f.text_field :start_time %>
+    <%= f.datetime_field :start_time %>
   </div>
   <div class="field">
     <%= f.label :end_time %><br />
-    <%= f.text_field :end_time %>
+    <%= f.datetime_field :end_time %>
   </div>
   <div class="field">
     <%= f.label :tier %><br />
