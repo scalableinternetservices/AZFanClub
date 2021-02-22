@@ -108,7 +108,7 @@ class PollsController < ApplicationController
 
       max_count = 0
       min_penalty = (2**(0.size * 8 -2) -1)
-      optimal_time = 0
+      optimal_time = @poll.timeframe_start 
 
       time_slot_user_counts.each do |time_slot, info|
         if info.count > max_count || (info.count == max_count && info.penalty < min_penalty)
@@ -119,7 +119,7 @@ class PollsController < ApplicationController
       end
 
       logger.debug "OPTIMAL TIME " + optimal_time.to_s
-      @optimal_time = optimal_time.strftime("%F %I:%M:%S %Z")
+      @optimal_time = optimal_time.strftime("%F %H:%M:%S %Z")
 
     end
 end
