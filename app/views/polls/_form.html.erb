@@ -19,10 +19,37 @@
     <%= form.label :timeframe_start %>
     <%= form.text_field :timeframe_start %>
   </div>
+<!--  <div class="field">-->
+    <%#= form.label :timeframe_end %>
+    <%#= form.text_field :timeframe_end %>
+<!--  </div>-->
   <div class="field">
     <%= form.label :timeframe_end %>
-    <%= form.text_field :timeframe_end %>
+    <%= form.text_field :timeframe_end, data:{ provide:'datepicker' } %>
   </div>
+
+  <a data-js-hide-link="true" href="">Hide</a>
+  <script>
+      window.onload = function() {
+          if (window.jQuery) {
+              // jQuery is loaded
+              alert("Yeah!");
+              console.log("Yeah");
+          } else {
+              // jQuery is not loaded
+              alert("Doesn't Work");
+          }
+      }
+
+      $(document).ready(function() {
+          $('[data-js-hide-link]').click(function(event){
+              alert('You clicked the Hide link');
+              event.preventDefault();
+          });
+      });
+  </script>
+
+
 
   <div class="actions">
     <%= form.submit %>

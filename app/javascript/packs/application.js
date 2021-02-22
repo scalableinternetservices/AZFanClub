@@ -8,6 +8,10 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
+require("moment/locale/ja")
+require("tempusdominus-bootstrap-4")
+import '../stylesheets/application'
+
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
