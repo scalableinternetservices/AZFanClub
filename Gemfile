@@ -60,3 +60,6 @@ gem 'bootstrap-datepicker-rails'
 
 # jQuery for datepicker
 gem 'jquery-rails'
+
+# obtaining time_zone of user
+gem 'local_time'

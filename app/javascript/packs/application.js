@@ -12,6 +12,9 @@ require("moment/locale/ja")
 require("tempusdominus-bootstrap-4")
 import '../stylesheets/application'
 
+//import LocalTime from "local-time"
+//LocalTime.start()
+
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()

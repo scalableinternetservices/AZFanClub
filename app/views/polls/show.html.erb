@@ -6,11 +6,11 @@
 </p>
 <p>
   Start:
-  <%= @poll.timeframe_start%>
+  <%= local_time(@poll.timeframe_start)%>
 </p>
 <p>
   End:
-  <%= @poll.timeframe_end%>
+  <%= local_time(@poll.timeframe_end)%>
 </p>
 
 <h2>Users</h2>
