@@ -16,12 +16,21 @@
     <%= form.text_field :title %>
   </div>
   <div class="field">
-    <%= form.label :timeframe_start %>
+    <%= form.label :start_date %>
     <%= form.date_field :timeframe_start %>
   </div>
   <div class="field">
-    <%= form.label :timeframe_end %>
+    <%= form.label :end_date %>
     <%= form.date_field :timeframe_end %>
+  </div>
+  <div class="field">
+    <%= form.label :poll_daily_start %>
+    <%= form.time_select :limit_start, discard_minute: true, ampm: true%>
+  </div>
+
+    <div class="field">
+    <%= form.label :poll_daily_end %>
+    <%= form.time_select :limit_start, discard_minute: true, ampm: true, default: {hour: 23, min: 0}%>
   </div>
 
   <div class="actions">
