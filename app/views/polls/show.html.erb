@@ -12,6 +12,14 @@
   End:
   <%= @poll.timeframe_end%>
 </p>
+<p>
+  Optimal Times:
+  <ol>
+    <% @optimal_times.each do |time| %>
+      <li><%= time %></li>
+    <% end %>
+  </ol>
+</p>
 
 <h2>Users</h2>
 <%= render @poll.users %>

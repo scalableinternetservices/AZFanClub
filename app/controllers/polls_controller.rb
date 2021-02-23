@@ -9,6 +9,7 @@ class PollsController < ApplicationController
   # GET /polls/1 or /polls/1.json
   def show
     logger.debug "PRINTING ID " + @poll.id
+    find_optimal_times()
   end
 
   # GET /polls/new
@@ -58,13 +59,71 @@ class PollsController < ApplicationController
   end
 
   private
+    TimeSlotInfo = Struct.new(:count, :penalty) 
+
     # Use callbacks to share common setup or constraints between actions.
     def set_poll
       @poll = Poll.find(params[:id])
+      @optimal_times = []
     end
 
     # Only allow a list of trusted parameters through.
     def poll_params
       params.require(:poll).permit(:title, :timeframe_start, :timeframe_end)
+    end
+
+    def find_optimal_times
+      users = @poll.users
+      increment = 15*60
+
+      time_slot_user_counts = {}
+
+      users.each do |user|
+        user.time_frames.each do |time_frame|
+          start_time = time_frame.start_time
+          # logger.debug "START BEFORE ROUND " + start_time.to_s
+          start_time = Time.at((start_time.to_r / increment).ceil * increment)
+          # logger.debug "START AFTER ROUND " + start_time.to_s
+          end_time = time_frame.end_time
+          # logger.debug "END BEFORE ROUND " + end_time.to_s
+          end_time = Time.at((end_time.to_r / increment).floor * increment)
+          # logger.debug "END AFTER ROUND " + end_time.to_s
+
+          cur_time = start_time
+
+          while cur_time < end_time do 
+            if time_slot_user_counts[cur_time].nil?
+              time_slot_user_counts[cur_time] = TimeSlotInfo.new(1, time_frame.tier ** 2)
+            else
+              time_slot_user_counts[cur_time].count += 1
+              time_slot_user_counts[cur_time].penalty += time_frame.tier ** 2
+            end
+            cur_time += increment
+          end
+        end
+        
+        # logger.debug "PRINTING USER " + user.name
+      end
+      logger.debug "USER COUNTS " + time_slot_user_counts.to_s
+
+      max_count = 0
+      optimal_times = {}
+
+      time_slot_user_counts.each do |time_slot, info|
+        if info.count > max_count
+          optimal_times.clear()
+          max_count = info.count
+          optimal_times[time_slot] = info.penalty
+        elsif info.count == max_count
+          optimal_times[time_slot] = info.penalty
+        end
+      end
+
+      optimal_times = optimal_times.sort_by{|k,v| v}
+      logger.debug "OPTIMAL TIMES " + optimal_times.to_s
+      optimal_times.each do |time_slot, penalty|
+        @optimal_times.append(time_slot.strftime("%F %H:%M:%S %Z"))       
+      end
+
     end
 end
