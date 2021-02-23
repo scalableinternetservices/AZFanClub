@@ -25,12 +25,12 @@
   </div>
   <div class="field">
     <%= form.label :poll_daily_start %>
-    <%= form.time_select :limit_start, discard_minute: true, ampm: true%>
+    <%= form.time_select :daily_start, ampm: true, discard_minute: true, ignore_date: true, default: {hour: 0}%>
   </div>
 
     <div class="field">
     <%= form.label :poll_daily_end %>
-    <%= form.time_select :limit_start, discard_minute: true, ampm: true, default: {hour: 23, min: 0}%>
+    <%= form.time_select :daily_end, ampm: true, discard_minute: true, ignore_date: true, default: {hour: 23}%>
   </div>
 
   <div class="actions">
