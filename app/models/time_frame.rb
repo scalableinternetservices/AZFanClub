@@ -16,6 +16,15 @@ class TimeFrame < ApplicationRecord
     if !(poll.timeframe_start <= end_time && end_time <= poll.timeframe_end)
       errors.add(:end_time, "must be inside poll time")
     end
+
+    if !(poll.daily_start <= start_time.hour) 
+      errors.add(:start_time, "must be after daily start time")
+    end
+
+    if !(poll.daily_end > end_time.hour)
+      errors.add(:end_time, "must be before daily end time")
+    end
+
   end
 
 end

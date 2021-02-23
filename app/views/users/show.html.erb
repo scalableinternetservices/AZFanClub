@@ -13,6 +13,9 @@
   End:
   <%= @poll.timeframe_end%>
 </p>
+<p>
+Availability must be between <%= am_pm(@poll.daily_start) %> and <%= am_pm(@poll.daily_end) %> 
+</p>
 
 <h2>User</h2>
 <p>
