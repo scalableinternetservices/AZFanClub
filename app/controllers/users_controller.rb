@@ -10,7 +10,6 @@ class UsersController < ApplicationController
     @user = @poll.users.create(user_params)
     # @user.time_frames.create!({start_time: user_params[:start_time], end_time: user_params[:end_time], user_id: @user.id})
     #redirect_to poll_path(@poll)
-    logger.debug "Printing user errors messages: " + @user.errors.to_s
 
     respond_to do |format|
       if @user.save
