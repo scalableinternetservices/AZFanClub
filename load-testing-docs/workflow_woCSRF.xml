@@ -10,35 +10,23 @@
   </servers>
 
   <load>
-    <arrivalphase phase="1" duration="5" unit="second">
+    <arrivalphase phase="1" duration="60" unit="second">
       <users arrivalrate="1" unit="second"></users>
     </arrivalphase>
-    <arrivalphase phase="2" duration="5" unit="second">
+    <arrivalphase phase="2" duration="60" unit="second">
       <users arrivalrate="2" unit="second"></users>
     </arrivalphase>
-    <arrivalphase phase="3" duration="5" unit="second">
+    <arrivalphase phase="3" duration="60" unit="second">
       <users arrivalrate="4" unit="second"></users>
     </arrivalphase>
-    <arrivalphase phase="4" duration="5" unit="second">
+    <arrivalphase phase="4" duration="60" unit="second">
       <users arrivalrate="8" unit="second"></users>
     </arrivalphase>
-    <arrivalphase phase="5" duration="5" unit="second">
+    <arrivalphase phase="5" duration="60" unit="second">
       <users arrivalrate="16" unit="second"></users>
     </arrivalphase>
-    <arrivalphase phase="6" duration="5" unit="second">
+    <arrivalphase phase="6" duration="60" unit="second">
       <users arrivalrate="32" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="7" duration="5" unit="second">
-      <users arrivalrate="64" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="8" duration="5" unit="second">
-      <users arrivalrate="128" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="9" duration="5" unit="second">
-      <users arrivalrate="256" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="10" duration="5" unit="second">
-      <users arrivalrate="512" unit="second"></users>
     </arrivalphase>
   </load>
 
@@ -52,7 +40,6 @@
     <session name="create_poll" type="ts_http" weight="1">
         <request><http method="GET" url="/polls"></http></request>
 		<request><http method="POST" url="/polls" contents="poll[title]=PollTest1&amp;poll[timeframe_start]=2020-01-08 04:05:06&amp;poll[timeframe_end]=2020-01-10 05:06:07"></http></request>
-	   </if>
     </session>
   
    <session name="create_poll_populate_users" type="ts_http" weight="1">
@@ -64,7 +51,7 @@
 		<if var="redirect" neq="">
 	    	<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
 			<request subst="true">
-					 <http method="POST" url="%%_redirect%%/users" contents="authenticity_token=%%_authenticity_token_2%%&amp;user[name]=azfanclub"></http>
+					 <http method="POST" url="%%_redirect%%/users" contents="user[name]=azfanclub"></http>
 		    </request>
 		</if>
     </session>
