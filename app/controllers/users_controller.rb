@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     @poll = Poll.find(params[:poll_id])
     @user = @poll.users.create!(user_params)
     # @user.time_frames.create!({start_time: user_params[:start_time], end_time: user_params[:end_time], user_id: @user.id})
-    redirect_to poll_path(@poll)
+    redirect_to poll_user_path(@poll, @user)
   end
 
   def user_params
