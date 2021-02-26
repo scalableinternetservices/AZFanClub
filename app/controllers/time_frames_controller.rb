@@ -1,4 +1,5 @@
 class TimeFramesController < ApplicationController
+    skip_before_action :verify_authenticity_token
     def create
         @poll = Poll.find(params[:poll_id])
         @user = User.find(params[:user_id])

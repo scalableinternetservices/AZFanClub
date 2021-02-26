@@ -1,5 +1,6 @@
 class PollsController < ApplicationController
   include PollsHelper
+  skip_before_action :verify_authenticity_token
   before_action :set_poll, only: %i[ show edit update destroy ]
 
   # GET /polls or /polls.json
@@ -24,6 +25,7 @@ class PollsController < ApplicationController
 
   # POST /polls or /polls.json
   def create
+    p params
     @poll = Poll.new(poll_params)
 
     respond_to do |format|
