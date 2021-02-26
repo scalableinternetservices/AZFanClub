@@ -12,7 +12,7 @@ Here users will not have any time slots associated with them.
 <h>
 Flow 3:
 </h>
-User adding themself to a poll and adding timeframes.
+User adding themself to a poll and adding timeframes. (discuss with team about returning userid)
 
 <h>
 Flow 4:
