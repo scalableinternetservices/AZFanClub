@@ -36,5 +36,8 @@
 <h2>Add user:</h2>
 <%= render "users/form" %>
 
+<h2>Comments:</h2>
+<%= render @poll.comments %>
+
 <%= link_to 'Edit', edit_poll_path(@poll) %> |
 <%= link_to 'Back', polls_path %>
