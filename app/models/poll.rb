@@ -12,7 +12,7 @@ class Poll < ApplicationRecord
     if timeframe_start.nil? || timeframe_end.nil? || (timeframe_start > timeframe_end)
       errors.add(:timeframe_start, "must be before end time")
     end
-    if daily_start <= daily_end
+    if daily_start > daily_end
       errors.add(:daily_start, "must be before daily end time")
     end
   end
