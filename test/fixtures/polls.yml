@@ -2,8 +2,6 @@
 
 poll:
   title: MyString
-  timeframe_start: 1999-01-08
-  timeframe_end: 1999-01-10
-  daily_start: 0
-  daily_end: 23
+  timeframe_start: 1999-01-08 04:05:06
+  timeframe_end: 1999-01-08 04:05:07
 

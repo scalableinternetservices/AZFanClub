@@ -6,27 +6,16 @@ class TimeFrame < ApplicationRecord
   validates :tier, inclusion: { in: 1..3, message: "must be 1, 2, or 3" }
 
   def validateTimeframe
-    poll = Poll.find(user.poll_id)
     if start_time.nil? || end_time.nil? || (start_time > end_time)
       errors.add(:start_time, "must be before end time")
-    
-    else
-      if !(poll.timeframe_start <= start_time && start_time <= poll.timeframe_end)
-        errors.add(:start_time, "must be inside poll time")
-      end
-      if !(poll.timeframe_start <= end_time && end_time <= poll.timeframe_end)
-        errors.add(:end_time, "must be inside poll time")
-      end
     end
-
-    if start_time.nil? || !(poll.daily_start <= start_time.hour) 
-      errors.add(:start_time, "must be after daily start time")
+    poll = Poll.find(user.poll_id)
+    if !(poll.timeframe_start <= start_time && start_time <= poll.timeframe_end)
+      errors.add(:start_time, "must be inside poll time")
     end
-
-    if end_time.nil? || !(poll.daily_end > end_time.hour)
-      errors.add(:end_time, "must be before daily end time")
+    if !(poll.timeframe_start <= end_time && end_time <= poll.timeframe_end)
+      errors.add(:end_time, "must be inside poll time")
     end
-
   end
 
 end

@@ -1,6 +1,8 @@
 <p>
   <b>User</b>
   <%= link_to user.name, [@poll, user] %>
+  <b>Time frames</b>
+  <%= user.time_frames.length %>
   <%= render user.time_frames %>
 
 </p>

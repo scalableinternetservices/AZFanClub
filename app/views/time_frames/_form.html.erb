@@ -1,23 +1,11 @@
 <%= form_for([@poll, @user, @user.time_frames.build]) do |f| %>
-  
-  <% if alert %>
-      <div id="error_explanation">
-      <h2> Error prohibited this time_frame from being saved </h2>
-      <ul>
-        <% alert.each do |error| %>
-          <li><%= error %></li>
-        <% end %>
-      </ul>
-      </div>
-  <% end %>
-
   <div class="field">
     <%= f.label :start_time %><br />
-    <%= f.datetime_field :start_time %>
+    <%= f.text_field :start_time %>
   </div>
   <div class="field">
     <%= f.label :end_time %><br />
-    <%= f.datetime_field :end_time %>
+    <%= f.text_field :end_time %>
   </div>
   <div class="field">
     <%= f.label :tier %><br />
