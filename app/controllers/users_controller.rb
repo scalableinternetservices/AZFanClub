@@ -7,9 +7,19 @@ class UsersController < ApplicationController
 
   def create
     @poll = Poll.find(params[:poll_id])
-    @user = @poll.users.create!(user_params)
+    @user = @poll.users.create(user_params)
     # @user.time_frames.create!({start_time: user_params[:start_time], end_time: user_params[:end_time], user_id: @user.id})
-    redirect_to poll_user_path(@poll, @user)
+    #redirect_to poll_path(@poll)
+
+    respond_to do |format|
+      if @user.save
+        format.html { redirect_to poll_user_path(@poll, @user), notice: "User was successfully created." }
+        format.json { render :show, status: :created, location: @poll }
+      else
+        format.html { redirect_to @poll, alert: @user.errors.full_messages }
+        format.json { render json: @user.errors }
+      end
+    end
   end
 
   def user_params
