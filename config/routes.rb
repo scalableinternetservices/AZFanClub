@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :polls do
     resources :users do
       resources :time_frames
+      resources :comments
     end
   end
   get 'index/index'
