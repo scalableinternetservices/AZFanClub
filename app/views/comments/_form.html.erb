@@ -1,15 +1,6 @@
 <%= form_for([@poll, @user, @user.comments.build]) do |f| %>
   
-  <% if alert %>
-      <div id="error_explanation">
-      <h2> Error prohibited this comment from being saved </h2>
-      <ul>
-        <% alert.each do |error| %>
-          <li><%= error %></li>
-        <% end %>
-      </ul>
-      </div>
-  <% end %>
+
 
   <div class="field">
     <%= f.label "Comment" %><br />
