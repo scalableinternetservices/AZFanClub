@@ -70,8 +70,8 @@ class PollsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def poll_params
       poll_params = params.require(:poll).permit(:title, :timeframe_start, :timeframe_end, "daily_start(4i)", "daily_end(4i)")
-      poll_params[:daily_start] = poll_params["daily_start(4i)"]
-      poll_params[:daily_end] = poll_params["daily_end(4i)"]
+      poll_params[:daily_start] = poll_params["daily_start(4i)"].to_i
+      poll_params[:daily_end] = poll_params["daily_end(4i)"].to_i
       poll_params.delete("daily_start(4i)")
       poll_params.delete("daily_end(4i)")
       return poll_params
