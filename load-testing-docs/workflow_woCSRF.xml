@@ -33,11 +33,12 @@
   <options>
     <!-- Set connection timeout to 2 seconds -->
     <option name="global_ack_timeout" value="2000"></option>
+    <option name="file_server" id="poll_details" value="poll_details.csv"/>
   </options>
 
   <sessions>
   
-    <session name="create_poll" type="ts_http" weight="1">
+   <session name="create_poll" type="ts_http" weight="1">
         <request><http method="GET" url="/polls"></http></request>
 		<request><http method="POST" url="/polls" contents="poll[title]=PollTest1&amp;poll[timeframe_start]=2020-01-08 04:05:06&amp;poll[timeframe_end]=2020-01-10 05:06:07"></http></request>
     </session>
@@ -45,49 +46,66 @@
    <session name="create_poll_populate_users" type="ts_http" weight="1">
         <request><http method="GET" url="/polls"></http></request>
 		<request>
-			<dyn_variable name="redirect" re="Location: (http://.*)\r"/> <!-- example: http://0.0.0.0:3000/polls/4607efdc-13a2-4837-8f46-207bddb81509-->
-		    <http method="POST" url="/polls" contents="poll[title]=PollTest2&amp;poll[timeframe_start]=2020-01-08 04:05:06&amp;poll[timeframe_end]=2020-01-10 05:06:07"></http>
+			<dyn_variable name="redirect" re="Location: (http://.*)\r"/>  <!-- example: http://0.0.0.0:3000/polls/4607efdc-13a2-4837-8f46-207bddb81509-->
+ <http method="POST" url="/polls" contents="poll[title]=PollTest2&amp;poll[timeframe_start]=2020-01-08 04:05:06&amp;poll[timeframe_end]=2020-01-10 05:06:07"></http>
 	    </request>
 		<if var="redirect" neq="">
 			<for from="1" to="10" incr="1" var="counter">
 				<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
 				<request subst="true">
-						 <http method="POST" url="%%_redirect%%/users" contents="authenticity_token=%%_authenticity_token_2%%&amp;user[name]=azfanclub%%_counter%%"></http>
+						 <http method="POST" url="%%_redirect%%/users" contents="user[name]=azfanclub%%_counter%%"></http>
 				</request>
 			</for>	
 		</if>
-    </session>
+    </session> 
     
-   <!-- 
-    <session name="user_enter_availability" type="ts_http" weight="1"> -->
+	<session name="create_user_populate_availability" type="ts_http" weight ="1"> 
+			<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
+	 			<var name="pollid" />
+	 			<var name="starttime"/>
+	 			<var name="endtime"/>
+			</setdynvars>
+	
+			<request subst="true"><http method="GET" url="/polls/%%_pollid%%"></http></request>
+			<request subst="true">
+				<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
+				<http method="POST" url="/polls/%%_pollid%%/users" contents="user[name]=azfanclub"></http>
+			</request>
+			<if var="redirect" neq="">
+				<for from="1" to="10" incr="1" var="counter">
+					<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
+					<request subst="true">
+				    <http method="POST" url="%%_redirect%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
+			   		</request>
+		   		</for>
+       		</if>
+	</session>
+	   
+   <session name="user_enter_availability" type="ts_http" weight="1"> 
     	<!-- Need to handle the case of obtaining user id in order to direct to the right page -->
     	<!-- remove single poll id and single userid constriants! -->
-   <!--	<request>
-            <dyn_variable name="authenticity_token" xpath="/html/head/meta[@name='csrf-token']/@content"></dyn_variable>
-            <http method="GET" url="/polls/4607efdc-13a2-4837-8f46-207bddb81509/users/1"></http>
-        </request>
-        <request subst="true">
-            <http method="POST" url="/polls/4607efdc-13a2-4837-8f46-207bddb81509/users/1/time_frames" contents="authenticity_token=%%_authenticity_token%%&amp;time_frame[start_time]=2020-01-08 04:40:06&amp;time_frame[end_time]=2020-01-08 05:06:07&amp;time_frame[tier]=1"></http>
-       </request>
-       <request>
-            <dyn_variable name="authenticity_token_2" xpath="/html/head/meta[@name='csrf-token']/@content"></dyn_variable>
-            <http method="GET" url="/polls/4607efdc-13a2-4837-8f46-207bddb81509/users/1"></http>
-        </request>
-        <request subst="true">
-            <http method="POST" url="/polls/4607efdc-13a2-4837-8f46-207bddb81509/users/1/time_frames" contents="authenticity_token=%%_authenticity_token_2%%&amp;time_frame[start_time]=2020-01-09 01:05:06&amp;time_frame[end_time]=2020-01-09 03:06:07&amp;time_frame[tier]=2"></http>
-       </request>
-       </session>
-      -->
+    	
+    	<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
+ 			<var name="pollid" />
+ 			<var name="starttime"/>
+ 			<var name="endtime"/>
+		</setdynvars>
+		
+		<for from="1" to="10" incr="1" var="counter">	
+	   		<request subst="true"> <http method="GET" url="/polls/%%_pollid%%/users/1"></http> </request>
+		    <request subst="true">
+		        <http method="POST" url="/polls/%%_pollid%%/users/1/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
+		   </request>
+		</for>
+    </session>
+     
       
     <session name="view_poll" type="ts_http" weight="1">
         <request>
             <http method="GET" url="/polls"></http>
         </request>
-    </session>	
+    </session>
 
-    
   </sessions>
-  
-  
   
 </tsung>
