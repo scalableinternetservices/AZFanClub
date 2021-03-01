@@ -49,10 +49,12 @@
 		    <http method="POST" url="/polls" contents="poll[title]=PollTest2&amp;poll[timeframe_start]=2020-01-08 04:05:06&amp;poll[timeframe_end]=2020-01-10 05:06:07"></http>
 	    </request>
 		<if var="redirect" neq="">
-	    	<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
-			<request subst="true">
-					 <http method="POST" url="%%_redirect%%/users" contents="user[name]=azfanclub"></http>
-		    </request>
+			<for from="1" to="10" incr="1" var="counter">
+				<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
+				<request subst="true">
+						 <http method="POST" url="%%_redirect%%/users" contents="authenticity_token=%%_authenticity_token_2%%&amp;user[name]=azfanclub%%_counter%%"></http>
+				</request>
+			</for>	
 		</if>
     </session>
     
