@@ -1,4 +1,5 @@
 class PollsController < ApplicationController
+  include PollsHelper
   before_action :set_poll, only: %i[ show edit update destroy ]
 
   # GET /polls or /polls.json
@@ -74,6 +75,9 @@ class PollsController < ApplicationController
       poll_params[:daily_end] = poll_params["daily_end(4i)"].to_i
       poll_params.delete("daily_start(4i)")
       poll_params.delete("daily_end(4i)")
+      poll_params[:timeframe_start] = tryParseDatetime(poll_params[:timeframe_start])
+      poll_params[:timeframe_end] = tryParseDatetime(poll_params[:timeframe_end], end_of_day: true)
+      
       return poll_params
     end
 
