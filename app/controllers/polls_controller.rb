@@ -25,7 +25,6 @@ class PollsController < ApplicationController
 
   # POST /polls or /polls.json
   def create
-    p params
     @poll = Poll.new(poll_params)
 
     respond_to do |format|
