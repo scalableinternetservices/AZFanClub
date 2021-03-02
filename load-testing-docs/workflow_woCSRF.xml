@@ -72,6 +72,10 @@
         <setdynvars sourcetype="random_number" start="1" end="10">
             <var name="iters" />
         </setdynvars>
+
+        <setdynvars sourcetype="random_string" length="100">
+            <var name="commentstring" />
+        </setdynvars>
     
         <request subst="true"><http method="GET" url="/polls/%%_pollid%%"></http></request>
 			<request subst="true">
@@ -83,6 +87,9 @@
 					<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
 					<request subst="true">
 				    <http method="POST" url="%%_redirect%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
+			   		</request>
+					<request subst="true">
+				    <http method="POST" url="%%_redirect%%/comments" contents="comment[body]=%%_commentstring%%"></http>
 			   		</request>
 		   		</for>
        		</if>
@@ -98,7 +105,11 @@
  			<var name="endtime"/>
 		</setdynvars>
 		
-		<for from="1" to="10" incr="1" var="counter">	
+        <setdynvars sourcetype="random_number" start="1" end="10">
+            <var name="iters" />
+        </setdynvars>
+        
+        <for from="1" to="%%_iters%%" incr="1" var="counter">	
 	   		<request subst="true"> <http method="GET" url="/polls/%%_pollid%%/users/1"></http> </request>
 		    <request subst="true">
 		        <http method="POST" url="/polls/%%_pollid%%/users/1/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
@@ -106,6 +117,31 @@
 		</for>
     </session>
      
+   <session name="user_enter_comments" type="ts_http" weight="1"> 
+    	<!-- Need to handle the case of obtaining user id in order to direct to the right page -->
+    	<!-- remove single poll id and single userid constriants! -->
+    	
+    	<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
+ 			<var name="pollid" />
+ 			<var name="starttime"/>
+ 			<var name="endtime"/>
+		</setdynvars>
+		
+        <setdynvars sourcetype="random_number" start="1" end="10">
+            <var name="iters" />
+        </setdynvars>
+
+        <setdynvars sourcetype="random_string" length="100">
+            <var name="commentstring" />
+        </setdynvars>
+        
+        <for from="1" to="%%_iters%%" incr="1" var="counter">	
+	   		<request subst="true"> <http method="GET" url="/polls/%%_pollid%%/users/1"></http> </request>
+		    <request subst="true">
+                <http method="POST" url="/polls/%%_pollid%%/users/1/comments" contents="comment[body]=%%_commentstring%%"></http>
+		   </request>
+		</for>
+    </session>
       
     <session name="view_poll" type="ts_http" weight="1">
         <request>
