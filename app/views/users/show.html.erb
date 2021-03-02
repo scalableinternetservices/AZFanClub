@@ -26,7 +26,16 @@ Availability must be between <%= am_pm(@poll.daily_start) %> and <%= am_pm(@poll
 <h2>Time Frames</h2>
 <%= render @user.time_frames %>
 
+<h2>Comments</h2>
+<%= render @user.comments %>
+
 <h2>Add Time Frame:</h2>
 <%= render "time_frames/form" %>
 
+<h2>Add Comment:</h2>
+<%= render "comments/form" %>
+
 <%= link_to 'Poll', @poll %>
+
+
+
