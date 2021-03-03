@@ -22,7 +22,7 @@ class PollsController < ApplicationController
   # GET /polls/id/1
   def get_poll_by_poll_id
     @poll = Poll.find_by poll_id: params[:poll_id]
-    redirect_to controller: 'polls', action: 'show', id:@poll.id
+    redirect_to controller: 'polls', action: 'show', id: @poll.id
   end
 
   # GET /polls/1/edit
