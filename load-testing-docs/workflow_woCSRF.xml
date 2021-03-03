@@ -68,7 +68,7 @@
  			<var name="endtime"/>
 		</setdynvars>
 		
-		<setdynvars sourcetype="random_number" start="1" end="2">
+		<setdynvars sourcetype="random_number" start="1" end="1000">
 			<var name="pollid" />
 		</setdynvars>
 		
@@ -113,7 +113,7 @@
  			<var name="endtime"/>
 		</setdynvars>
 		
-		<setdynvars sourcetype="random_number" start="1" end="2">
+		<setdynvars sourcetype="random_number" start="1" end="10000">
 			<var name="userid" />
 		</setdynvars>
 		
@@ -143,7 +143,7 @@
  			<var name="endtime"/>
 		</setdynvars>
 		
-		<setdynvars sourcetype="random_number" start="1" end="2">
+		<setdynvars sourcetype="random_number" start="1" end="10000">
 			<var name="userid" />
 		</setdynvars>
 		
