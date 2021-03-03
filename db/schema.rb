@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_27_052500) do
+ActiveRecord::Schema.define(version: 2021_03_02_230107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 2021_02_27_052500) do
     t.datetime "timeframe_end"
     t.integer "daily_start"
     t.integer "daily_end"
+    t.serial "poll_id", null: false
+    t.index ["poll_id"], name: "index_polls_on_poll_id", unique: true
   end
 
   create_table "time_frames", force: :cascade do |t|
