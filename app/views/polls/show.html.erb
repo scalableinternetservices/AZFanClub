@@ -31,7 +31,15 @@
 </p>
 
 <h2>Users</h2>
-<%= render @poll.users %>
+<% logger.debug "FRAGMENT CACHE" %>
+<% logger.debug Rails.cache.instance_variable_get(:@data).to_s %>
+<% @poll.users.each do |user| %>
+  <% cache user do %>
+    <% logger.debug "NOT CACHED" %>
+    <% logger.debug user.name %>
+    <%= render user %>
+  <% end %>
+<% end %>
 
 <h2>Add user:</h2>
 <%= render "users/form" %>
