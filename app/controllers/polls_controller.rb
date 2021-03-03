@@ -114,7 +114,7 @@ class PollsController < ApplicationController
         
         # logger.debug "PRINTING USER " + user.name
       end
-      logger.debug "USER COUNTS " + time_slot_user_counts.to_s
+      # logger.debug "USER COUNTS " + time_slot_user_counts.to_s
 
       max_count = 0
       optimal_times = {}
@@ -130,7 +130,7 @@ class PollsController < ApplicationController
       end
 
       optimal_times = optimal_times.sort_by{|k,v| v}
-      logger.debug "OPTIMAL TIMES " + optimal_times.to_s
+      # logger.debug "OPTIMAL TIMES " + optimal_times.to_s
       optimal_times.each do |time_slot, penalty|
         @optimal_times.append(time_slot.strftime("%F %H:%M:%S %Z"))       
       end
