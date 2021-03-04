@@ -3,8 +3,9 @@
 2. SSH into the deployed instance using `eb ssh <ENV name>`
 3. The following commands will reset the database (effectively seeding it)
 ```
+sudo -i
 cd /var/app/current/load-testing-docs
-sudo ./seed_database.sh
+./seed_database.sh
 ```
 
 ## Instructions to perform load testing in tsung instance
