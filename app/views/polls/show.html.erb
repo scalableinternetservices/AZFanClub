@@ -31,13 +31,13 @@
 </p>
 
 <h2>Users</h2>
-<%= render @poll.users %>
+<%= render @poll.users.includes(:time_frames) %>
 
 <h2>Add user:</h2>
 <%= render "users/form" %>
 
 <h2>Comments:</h2>
-<%= render @poll.comments %>
+<%= render @poll.comments%>
 
 <%= link_to 'Edit', edit_poll_path(@poll) %> |
 <%= link_to 'Back', polls_path %>

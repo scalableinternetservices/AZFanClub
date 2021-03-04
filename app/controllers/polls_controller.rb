@@ -89,7 +89,7 @@ class PollsController < ApplicationController
     end
 
     def find_optimal_times
-      users = @poll.users
+      users = @poll.users.includes(:time_frames,:comments)
       increment = 15*60
 
       time_slot_user_counts = {}
