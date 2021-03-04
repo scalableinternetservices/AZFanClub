@@ -1,51 +1,54 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @poll.title %>
-</p>
-<p>
-  Start:
-  <%= @poll.timeframe_start%>
-</p>
-<p>
-  End:
-  <%= @poll.timeframe_end%>
-</p>
-<p>
-  Optimal Times:
-  <ol>
-    <% @optimal_times.each do |time| %>
-      <li><%= time %></li>
+<% cache @poll do %>
+  <p>
+    <strong>Title:</strong>
+    <%= @poll.title %>
+  </p>
+  <p>
+    Start:
+    <%= @poll.timeframe_start%>
+  </p>
+  <p>
+    End:
+    <%= @poll.timeframe_end%>
+  </p>
+  <p>
+    Optimal Times:
+    <ol>
+      <% @optimal_times.each do |time| %>
+        <li><%= time %></li>
+      <% end %>
+    </ol>
+  </p>
+
+  <p>
+    Poll start time:
+    <%= @poll.daily_start%>
+  </p>
+  <p>
+    Poll end time:
+    <%= @poll.daily_end%>
+  </p>
+
+  <h2>Users</h2>
+  <% @poll.users.each do |user| %>
+    <% cache user do %>
+      <%= render user %>
     <% end %>
-  </ol>
-</p>
-
-<p>
-  Poll start time:
-  <%= @poll.daily_start%>
-</p>
-<p>
-  Poll end time:
-  <%= @poll.daily_end%>
-</p>
-
-<h2>Users</h2>
-<% logger.debug "FRAGMENT CACHE" %>
-<% logger.debug Rails.cache.instance_variable_get(:@data).to_s %>
-<% @poll.users.each do |user| %>
-  <% cache user do %>
-    <% logger.debug "NOT CACHED" %>
-    <% logger.debug user.name %>
-    <%= render user %>
   <% end %>
+
+  <h2>Add user:</h2>
+  <%= render "users/form" %>
+
+  <h2>Comments:</h2>
+  <% @poll.comments.each do |comment| %>
+    <% cache comment do %>
+      <%= render comment %>
+    <% end %>
+  <% end %>
+
+  <%= link_to 'Edit', edit_poll_path(@poll) %> |
+  <%= link_to 'Back', polls_path %>
+
 <% end %>
-
-<h2>Add user:</h2>
-<%= render "users/form" %>
-
-<h2>Comments:</h2>
-<%= render @poll.comments %>
-
-<%= link_to 'Edit', edit_poll_path(@poll) %> |
-<%= link_to 'Back', polls_path %>
