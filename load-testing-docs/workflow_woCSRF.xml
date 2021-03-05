@@ -63,12 +63,15 @@
     </session> 
     
 	<session name="create_user_populate_availability" type="ts_http" weight ="1"> 
-			<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
-	 			<var name="pollid" />
-	 			<var name="starttime"/>
-	 			<var name="endtime"/>
-			</setdynvars>
-	
+		<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
+ 			<var name="starttime"/>
+ 			<var name="endtime"/>
+		</setdynvars>
+		
+		<setdynvars sourcetype="random_number" start="1" end="1000">
+			<var name="pollid" />
+		</setdynvars>
+		
         <setdynvars sourcetype="random_number" start="1" end="10">
             <var name="iters" />
         </setdynvars>
@@ -77,22 +80,28 @@
             <var name="commentstring" />
         </setdynvars>
     
-        <request subst="true"><http method="GET" url="/polls/%%_pollid%%"></http></request>
-			<request subst="true">
-				<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
-				<http method="POST" url="/polls/%%_pollid%%/users" contents="user[name]=azfanclub"></http>
-			</request>
-			<if var="redirect" neq="">
-				<for from="1" to="%%_iters%%" incr="1" var="counter">
-					<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
-					<request subst="true">
-				    <http method="POST" url="%%_redirect%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
-			   		</request>
-					<request subst="true">
-				    <http method="POST" url="%%_redirect%%/comments" contents="comment[body]=%%_commentstring%%"></http>
-			   		</request>
-		   		</for>
-       		</if>
+        <request subst="true">
+        	<dyn_variable name="redirect0" re="Location: (http://.*)\r"/>
+        	<http method="GET" url="/polls/id/%%_pollid%%"></http>
+        </request>
+        
+		<request subst="true">
+			<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
+			<http method="POST" url="%%_redirect0%%/users" contents="user[name]=azfanclub"></http>
+		</request>
+		
+		<if var="redirect" neq="">
+			<for from="1" to="%%_iters%%" incr="1" var="counter">
+				<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
+				<request subst="true">
+				<http method="POST" url="%%_redirect%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
+		   		</request>
+				<request subst="true">
+				<http method="POST" url="%%_redirect%%/comments" contents="comment[body]=%%_commentstring%%"></http>
+		   		</request>
+	   		</for>
+   		</if>
+   		
 	</session>
 	   
    <session name="user_enter_availability" type="ts_http" weight="1"> 
@@ -100,19 +109,27 @@
     	<!-- remove single poll id and single userid constriants! -->
     	
     	<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
- 			<var name="pollid" />
  			<var name="starttime"/>
  			<var name="endtime"/>
+		</setdynvars>
+		
+		<setdynvars sourcetype="random_number" start="1" end="10000">
+			<var name="userid" />
 		</setdynvars>
 		
         <setdynvars sourcetype="random_number" start="1" end="10">
             <var name="iters" />
         </setdynvars>
         
+        <request subst="true">
+        	<dyn_variable name="redirect" re="Location: (http://.*)\r"/> <!--redirect will have /polls/%%_pollid%%/users/%%_userid%%-->
+        	<http method="GET" url="/user/%%_userid%%"></http>
+        </request>
+        
         <for from="1" to="%%_iters%%" incr="1" var="counter">	
-	   		<request subst="true"> <http method="GET" url="/polls/%%_pollid%%/users/1"></http> </request>
+	   		<request subst="true"> <http method="GET" url="%%_redirect%%/users/%%_userid%%"></http> </request>
 		    <request subst="true">
-		        <http method="POST" url="/polls/%%_pollid%%/users/1/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
+		        <http method="POST" url="%%_redirect%%/users/%%_userid%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
 		   </request>
 		</for>
     </session>
@@ -122,9 +139,12 @@
     	<!-- remove single poll id and single userid constriants! -->
     	
     	<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
- 			<var name="pollid" />
  			<var name="starttime"/>
  			<var name="endtime"/>
+		</setdynvars>
+		
+		<setdynvars sourcetype="random_number" start="1" end="10000">
+			<var name="userid" />
 		</setdynvars>
 		
         <setdynvars sourcetype="random_number" start="1" end="10">
@@ -135,10 +155,15 @@
             <var name="commentstring" />
         </setdynvars>
         
+        <request subst="true">
+        	<dyn_variable name="redirect" re="Location: (http://.*)\r"/> <!--redirect will have /polls/%%_pollid%%/users/%%_userid%%-->
+        	<http method="GET" url="/user/%%_userid%%"></http>
+        </request>
+        
         <for from="1" to="%%_iters%%" incr="1" var="counter">	
-	   		<request subst="true"> <http method="GET" url="/polls/%%_pollid%%/users/1"></http> </request>
+        	<request subst="true"> <http method="GET" url="%%_redirect%%/users/%%_userid%%"></http> </request>
 		    <request subst="true">
-                <http method="POST" url="/polls/%%_pollid%%/users/1/comments" contents="comment[body]=%%_commentstring%%"></http>
+                <http method="POST" url="%%_redirect%%/users/%%_userid%%/comments" contents="comment[body]=%%_commentstring%%"></http>
 		   </request>
 		</for>
     </session>

@@ -6,6 +6,12 @@ class UsersController < ApplicationController
     
   end
 
+  def get_poll_by_user_id
+    @user = User.find(params[:id])
+    p_id = @user.poll_id
+    redirect_to controller: 'polls', action: 'show', id: p_id
+  end
+
   def create
     @poll = Poll.find(params[:poll_id])
     @user = @poll.users.create(user_params)
