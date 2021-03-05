@@ -11,6 +11,7 @@ class PollsController < ApplicationController
   # GET /polls/1 or /polls/1.json
   def show
     logger.debug "PRINTING ID " + @poll.id
+    @comments = @poll.comments.page(params[:page]).per(10)
     find_optimal_times()
   end
 
