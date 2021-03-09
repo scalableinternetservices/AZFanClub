@@ -10,13 +10,8 @@ class PollsController < ApplicationController
 
   # GET /polls/1 or /polls/1.json
   def show
-    logger.debug "PRINTING ID " + @poll.id
     @comments = @poll.comments.page params[:page]
-    logger.debug "Check @comments"
-    @comments.each do |comment|
-      logger.debug "INside the loop"
-      logger.debug comment.body
-    end
+    @users = @poll.users.page params[:page]
     find_optimal_times()
   end
 
