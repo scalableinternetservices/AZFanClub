@@ -39,5 +39,9 @@
 <h2>Comments:</h2>
 <%= paginate @comments %>
 
+<%= render @comments %>
+
+<% paginate @comments%>
+
 <%= link_to 'Edit', edit_poll_path(@poll) %> |
 <%= link_to 'Back', polls_path %>

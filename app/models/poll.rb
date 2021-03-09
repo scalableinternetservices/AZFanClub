@@ -8,6 +8,7 @@ class Poll < ApplicationRecord
   validates :daily_start, numericality: { only_integer: true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 24 }
   validates :daily_end, numericality: { only_integer: true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 24 }
   validate :validateTimeframe
+  paginates_per 5
 
   def validateTimeframe
     if timeframe_start.nil? || timeframe_end.nil? || (timeframe_start > timeframe_end)
