@@ -1,179 +1,232 @@
 <?xml version="1.0"?>
 <!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" [] >
 <tsung loglevel="notice">
-  <clients>
-    <client host="localhost" maxusers="32768" use_controller_vm="true" />
-  </clients>
+	<clients>
+		<client host="localhost" maxusers="32768" use_controller_vm="true"/>
+	</clients>
 
-  <servers>
-    <server host="localhost" port="3000" type="tcp"></server>
-  </servers>
+	<servers>
+		<server host="localhost" port="3000" type="tcp"/>
+	</servers>
 
-  <load>
-    <arrivalphase phase="1" duration="60" unit="second">
-      <users arrivalrate="1" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="2" duration="60" unit="second">
-      <users arrivalrate="2" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="3" duration="60" unit="second">
-      <users arrivalrate="4" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="4" duration="60" unit="second">
-      <users arrivalrate="8" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="5" duration="60" unit="second">
-      <users arrivalrate="16" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="6" duration="60" unit="second">
-      <users arrivalrate="32" unit="second"></users>
-    </arrivalphase>
-  </load>
+	<load>
+		<arrivalphase phase="1" duration="60" unit="second">
+			<users arrivalrate="2" unit="second"/>
+		</arrivalphase>
+		<arrivalphase phase="2" duration="60" unit="second">
+			<users arrivalrate="4" unit="second"/>
+		</arrivalphase>
+		<arrivalphase phase="3" duration="60" unit="second">
+			<users arrivalrate="8" unit="second"/>
+		</arrivalphase>
+		<arrivalphase phase="4" duration="60" unit="second">
+			<users arrivalrate="16" unit="second"/>
+		</arrivalphase>
+		<arrivalphase phase="5" duration="60" unit="second">
+			<users arrivalrate="32" unit="second"/>
+		</arrivalphase>
+		<arrivalphase phase="6" duration="60" unit="second">
+			<users arrivalrate="64" unit="second"/>
+		</arrivalphase>
+		<arrivalphase phase="7" duration="60" unit="second">
+			<users arrivalrate="128" unit="second"/>
+		</arrivalphase>
+	</load>
 
-  <options>
-    <!-- Set connection timeout to 2 seconds -->
-    <option name="global_ack_timeout" value="2000"></option>
-    <option name="file_server" id="poll_details" value="poll_details.csv"/>
-  </options>
+	<options>
+		<option name="global_ack_timeout" value="2000"/>
+		<option name="file_server" id="poll_details" value="poll_details.csv"/>
+	</options>
 
-  <sessions>
-  
-   <session name="create_poll" type="ts_http" weight="1">
-        <request><http method="GET" url="/polls"></http></request>
-		<request><http method="POST" url="/polls" contents="poll[title]=PollTest1&amp;poll[timeframe_start]=2021-01-08 00:00:00&amp;poll[timeframe_end]=2021-01-10 00:00:00&amp;poll[daily_start(4i)]=09&amp;poll[daily_end(4i)]=22"></http></request>
-    </session>
-  
-    <session name="create_poll_populate_users" type="ts_http" weight="1">
-        <setdynvars sourcetype="random_number" start="1" end="10">
-            <var name="iters" />
-        </setdynvars>
-        <request><http method="GET" url="/polls"></http></request>
-		<request>
-			<dyn_variable name="redirect" re="Location: (http://.*)\r"/>  <!-- example: http://0.0.0.0:3000/polls/4607efdc-13a2-4837-8f46-207bddb81509-->
- <http method="POST" url="/polls" contents="poll[title]=PollTest2&amp;poll[timeframe_start]=2021-01-08 00:00:00&amp;poll[timeframe_end]=2021-01-10 00:00:00&amp;poll[daily_start(4i)]=09&amp;poll[daily_end(4i)]=22"></http>
-	    </request>
-		<if var="redirect" neq="">
-			<for from="1" to="%%_iters%%" incr="1" var="counter">
-				<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
-				<request subst="true">
-						 <http method="POST" url="%%_redirect%%/users" contents="user[name]=azfanclub%%_counter%%"></http>
+	<sessions>
+		<session name="create_poll" type="ts_http" weight="1">
+			<transaction name="1_create_poll">
+				<request>
+					<http method="POST" url="/polls" contents="poll[title]=PollTest1&amp;poll[timeframe_start]=2021-01-08 00:00:00&amp;poll[timeframe_end]=2021-01-10 00:00:00&amp;poll[daily_start(4i)]=09&amp;poll[daily_end(4i)]=22"/>
 				</request>
-			</for>	
-		</if>
-    </session> 
-    
-	<session name="create_user_populate_availability" type="ts_http" weight ="1"> 
-		<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
- 			<var name="starttime"/>
- 			<var name="endtime"/>
-		</setdynvars>
-		
-		<setdynvars sourcetype="random_number" start="1" end="1000">
-			<var name="pollid" />
-		</setdynvars>
-		
-        <setdynvars sourcetype="random_number" start="1" end="10">
-            <var name="iters" />
-        </setdynvars>
+			</transaction>
+		</session>
 
-        <setdynvars sourcetype="random_string" length="100">
-            <var name="commentstring" />
-        </setdynvars>
-    
-        <request subst="true">
-        	<dyn_variable name="redirect0" re="Location: (http://.*)\r"/>
-        	<http method="GET" url="/polls/id/%%_pollid%%"></http>
-        </request>
-        
-		<request subst="true">
-			<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
-			<http method="POST" url="%%_redirect0%%/users" contents="user[name]=azfanclub"></http>
-		</request>
-		
-		<if var="redirect" neq="">
+		<session name="create_poll_populate_users" type="ts_http" weight="1">
+			<setdynvars sourcetype="random_number" start="1" end="10">
+				<var name="iters"/>
+			</setdynvars>
+
+			<request>
+				<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
+				<http method="POST" url="/polls" contents="poll[title]=PollTest2&amp;poll[timeframe_start]=2021-01-08 00:00:00&amp;poll[timeframe_end]=2021-01-10 00:00:00&amp;poll[daily_start(4i)]=09&amp;poll[daily_end(4i)]=22"/>
+			</request>
+
+			<if var="redirect" neq="">
+				<for from="1" to="%%_iters%%" incr="1" var="counter">
+					<transaction name="2_view_poll">
+						<request subst="true">
+							<http method="GET" url="%%_redirect%%"/>
+						</request>
+					</transaction>
+
+					<transaction name="2_create_user">
+						<request subst="true">
+							<http method="POST" url="%%_redirect%%/users" contents="user[name]=azfanclub%%_counter%%"/>
+						</request>
+					</transaction>
+				</for>
+			</if>
+		</session>
+
+		<session name="create_user_populate_availability" type="ts_http" weight="1">
+			<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
+				<var name="starttime"/>
+				<var name="endtime"/>
+			</setdynvars>
+
+			<setdynvars sourcetype="random_number" start="1" end="1000">
+				<var name="pollid"/>
+			</setdynvars>
+
+			<setdynvars sourcetype="random_number" start="1" end="10">
+				<var name="iters"/>
+			</setdynvars>
+
+			<setdynvars sourcetype="random_string" length="100">
+				<var name="commentstring"/>
+			</setdynvars>
+
+			<request subst="true">
+				<dyn_variable name="redirect0" re="Location: (http://.*)\r"/>
+				<http method="GET" url="/polls/id/%%_pollid%%"/>
+			</request>
+
+			<transaction name="3_view_poll_before">
+				<request subst="true">
+					<http method="GET" url="%%_redirect0%%"/>
+				</request>
+			</transaction>			
+
+			<transaction name="3_create_user">
+				<request subst="true">
+					<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
+					<http method="POST" url="%%_redirect0%%/users" contents="user[name]=azfanclub"/>
+				</request>
+			</transaction>
+
+			<if var="redirect" neq="">
+				<for from="1" to="%%_iters%%" incr="1" var="counter">
+					<transaction name="3_view_user">
+						<request subst="true">
+							<http method="GET" url="%%_redirect%%"/>
+						</request>
+					</transaction>
+
+					<transaction name="3_create_timeframe">
+						<request subst="true">
+							<http method="POST" url="%%_redirect%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"/>
+						</request>
+					</transaction>
+
+					<transaction name="3_create_comment">
+						<request subst="true">
+							<http method="POST" url="%%_redirect%%/comments" contents="comment[body]=%%_commentstring%%"/>
+						</request>
+					</transaction>
+				</for>
+
+				<transaction name="3_view_poll_after">
+					<request subst="true">
+							<http method="GET" url="%%_redirect0%%"/>
+					</request>
+				</transaction>
+			</if>
+
+		</session>
+
+		<session name="user_enter_availability" type="ts_http" weight="1">
+			<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
+				<var name="starttime"/>
+				<var name="endtime"/>
+			</setdynvars>
+
+			<setdynvars sourcetype="random_number" start="1" end="10000">
+				<var name="userid"/>
+			</setdynvars>
+
+			<setdynvars sourcetype="random_number" start="1" end="10">
+				<var name="iters"/>
+			</setdynvars>
+
+			<request subst="true">
+				<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
+				<http method="GET" url="/user/%%_userid%%"/>
+			</request>
+
 			<for from="1" to="%%_iters%%" incr="1" var="counter">
-				<request subst="true"><http method="GET" url="%%_redirect%%"></http></request>
-				<request subst="true">
-				<http method="POST" url="%%_redirect%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
-		   		</request>
-				<request subst="true">
-				<http method="POST" url="%%_redirect%%/comments" contents="comment[body]=%%_commentstring%%"></http>
-		   		</request>
-	   		</for>
-   		</if>
-   		
-	</session>
-	   
-   <session name="user_enter_availability" type="ts_http" weight="1"> 
-    	<!-- Need to handle the case of obtaining user id in order to direct to the right page -->
-    	<!-- remove single poll id and single userid constriants! -->
-    	
-    	<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
- 			<var name="starttime"/>
- 			<var name="endtime"/>
-		</setdynvars>
-		
-		<setdynvars sourcetype="random_number" start="1" end="10000">
-			<var name="userid" />
-		</setdynvars>
-		
-        <setdynvars sourcetype="random_number" start="1" end="10">
-            <var name="iters" />
-        </setdynvars>
-        
-        <request subst="true">
-        	<dyn_variable name="redirect" re="Location: (http://.*)\r"/> <!--redirect will have /polls/%%_pollid%%/users/%%_userid%%-->
-        	<http method="GET" url="/user/%%_userid%%"></http>
-        </request>
-        
-        <for from="1" to="%%_iters%%" incr="1" var="counter">	
-	   		<request subst="true"> <http method="GET" url="%%_redirect%%/users/%%_userid%%"></http> </request>
-		    <request subst="true">
-		        <http method="POST" url="%%_redirect%%/users/%%_userid%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"></http>
-		   </request>
-		</for>
-    </session>
-     
-   <session name="user_enter_comments" type="ts_http" weight="1"> 
-    	<!-- Need to handle the case of obtaining user id in order to direct to the right page -->
-    	<!-- remove single poll id and single userid constriants! -->
-    	
-    	<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
- 			<var name="starttime"/>
- 			<var name="endtime"/>
-		</setdynvars>
-		
-		<setdynvars sourcetype="random_number" start="1" end="10000">
-			<var name="userid" />
-		</setdynvars>
-		
-        <setdynvars sourcetype="random_number" start="1" end="10">
-            <var name="iters" />
-        </setdynvars>
+				<transaction name="4_view_user">
+					<request subst="true">
+						<http method="GET" url="%%_redirect%%/users/%%_userid%%"/>
+					</request>
+				</transaction>
 
-        <setdynvars sourcetype="random_string" length="100">
-            <var name="commentstring" />
-        </setdynvars>
-        
-        <request subst="true">
-        	<dyn_variable name="redirect" re="Location: (http://.*)\r"/> <!--redirect will have /polls/%%_pollid%%/users/%%_userid%%-->
-        	<http method="GET" url="/user/%%_userid%%"></http>
-        </request>
-        
-        <for from="1" to="%%_iters%%" incr="1" var="counter">	
-        	<request subst="true"> <http method="GET" url="%%_redirect%%/users/%%_userid%%"></http> </request>
-		    <request subst="true">
-                <http method="POST" url="%%_redirect%%/users/%%_userid%%/comments" contents="comment[body]=%%_commentstring%%"></http>
-		   </request>
-		</for>
-    </session>
-      
-    <session name="view_poll" type="ts_http" weight="1">
-        <request>
-            <http method="GET" url="/polls"></http>
-        </request>
-    </session>
+				<transaction name="4_create_timeframe">
+					<request subst="true">
+						<http method="POST" url="%%_redirect%%/users/%%_userid%%/time_frames" contents="time_frame[start_time]=%%_starttime%%&amp;time_frame[end_time]=%%_endtime%%&amp;time_frame[tier]=1"/>
+					</request>
+				</transaction>
+			</for>
+		</session>
 
-  </sessions>
-  
+		<session name="user_enter_comments" type="ts_http" weight="1">
+			<setdynvars sourcetype="file" fileid="poll_details" delimiter=";" order="iter">
+				<var name="starttime"/>
+				<var name="endtime"/>
+			</setdynvars>
+
+			<setdynvars sourcetype="random_number" start="1" end="10000">
+				<var name="userid"/>
+			</setdynvars>
+
+			<setdynvars sourcetype="random_number" start="1" end="10">
+				<var name="iters"/>
+			</setdynvars>
+
+			<setdynvars sourcetype="random_string" length="100">
+				<var name="commentstring"/>
+			</setdynvars>
+
+			<request subst="true">
+				<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
+				<http method="GET" url="/user/%%_userid%%"/>
+			</request>
+
+			<for from="1" to="%%_iters%%" incr="1" var="counter">
+				<transaction name="5_view_user">
+					<request subst="true">
+						<http method="GET" url="%%_redirect%%/users/%%_userid%%"/>
+					</request>
+				</transaction>
+
+				<transaction name="5_create_comment">
+					<request subst="true">
+						<http method="POST" url="%%_redirect%%/users/%%_userid%%/comments" contents="comment[body]=%%_commentstring%%"/>
+					</request>
+				</transaction>
+			</for>
+		</session>
+
+		<session name="view_poll" type="ts_http" weight="10">
+			<setdynvars sourcetype="random_number" start="1" end="1000">
+				<var name="pollid"/>
+			</setdynvars>
+
+			<request subst="true">
+				<dyn_variable name="redirect" re="Location: (http://.*)\r"/>
+				<http method="GET" url="/polls/id/%%_pollid%%"/>
+			</request>
+
+			<transaction name="6_view_poll">
+				<request subst="true">
+					<http method="GET" url="%%_redirect%%"/>
+				</request>
+			</transaction>
+		</session>
+	</sessions>
 </tsung>
