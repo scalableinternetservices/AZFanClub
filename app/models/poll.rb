@@ -28,7 +28,7 @@ class Poll < ApplicationRecord
 
       time_slot_user_counts = {}
 
-      users.each do |user|
+      users.includes([:time_frames]).each do |user|
         user.time_frames.each do |time_frame|
           start_time = time_frame.start_time
           # logger.debug "START BEFORE ROUND " + start_time.to_s

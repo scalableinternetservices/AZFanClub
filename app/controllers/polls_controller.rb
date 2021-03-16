@@ -11,7 +11,7 @@ class PollsController < ApplicationController
   # GET /polls/1 or /polls/1.json
   def show
     @comments = @poll.comments.page params[:page]
-    @users = @poll.users.page params[:page]
+    @users = @poll.users.includes([:time_frames]).page params[:page]
     find_optimal_times()
   end
 
