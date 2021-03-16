@@ -10,18 +10,13 @@
     </tr>
   </thead>
 
-  <tbody>
-    <% @polls.each do |poll| %>
-      <tr>
-        <td><%= poll.title %></td>
-        <td><%= poll.timeframe_start %></td>
-        <td><%= poll.timeframe_end %></td>
-        <td><%= link_to 'Show', poll %></td>
-        <td><%= link_to 'Edit', edit_poll_path(poll) %></td>
-        <td><%= link_to 'Destroy', poll, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
+<%= paginate @polls %>
+<tbody>
+<%= render @polls %>
+</tbody>
+<% paginate @polls%>
+
+
 </table>
 
 <br>

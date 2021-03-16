@@ -15,7 +15,7 @@
 <p>
   Optimal Times:
   <ol>
-    <% @optimal_times.each do |time| %>
+     <% @optimal_times.each do |time| %>
       <li><%= time %></li>
     <% end %>
   </ol>
@@ -31,13 +31,23 @@
 </p>
 
 <h2>Users</h2>
-<%= render @poll.users.includes(:time_frames) %>
+
+<%= paginate @users %>
+
+<%= render @users.includes(:time_frames) %>
+
+<% paginate @users%>
 
 <h2>Add user:</h2>
 <%= render "users/form" %>
 
 <h2>Comments:</h2>
-<%= render @poll.comments.includes(:user)%>
+
+<%= paginate @comments %>
+
+<%= render @comments.includes(:user)%>
+
+<% paginate @comments%>
 
 <%= link_to 'Edit', edit_poll_path(@poll) %> |
 <%= link_to 'Back', polls_path %>
