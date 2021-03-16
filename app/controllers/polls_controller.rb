@@ -12,7 +12,7 @@ class PollsController < ApplicationController
   def show
     @comments = @poll.comments.page params[:page]
     @users = @poll.users.page params[:page]
-    find_optimal_times()
+    
   end
 
   # GET /polls/new
