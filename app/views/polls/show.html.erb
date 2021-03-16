@@ -1,53 +1,65 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @poll.title %>
-</p>
-<p>
-  Start:
-  <%= @poll.timeframe_start%>
-</p>
-<p>
-  End:
-  <%= @poll.timeframe_end%>
-</p>
-<p>
-  Optimal Times:
-  <ol>
-     <% @optimal_times.each do |time| %>
-      <li><%= time %></li>
-    <% end %>
-  </ol>
-</p>
+<% cache @poll do %>
+  <p>
+    <strong>Title:</strong>
+    <%= @poll.title %>
+  </p>
+  <p>
+    Start:
+    <%= @poll.timeframe_start%>
+  </p>
+  <p>
+    End:
+    <%= @poll.timeframe_end%>
+  </p>
+  <p>
+    Optimal Times:
+    <ol>
+      <% @optimal_times.each do |time| %>
+        <li><%= time %></li>
+      <% end %>
+    </ol>
+  </p>
 
-<p>
-  Poll start time:
-  <%= @poll.daily_start%>
-</p>
-<p>
-  Poll end time:
-  <%= @poll.daily_end%>
-</p>
+  <p>
+    Poll start time:
+    <%= @poll.daily_start%>
+  </p>
+  <p>
+    Poll end time:
+    <%= @poll.daily_end%>
+  </p>
 
 <h2>Users</h2>
 
 <%= paginate @users %>
 
-<%= render @users.includes(:time_frames) %>
+<% @users.includes(:time_frames).each do |user| %>
+  <% cache user do %>
+    <%= render user %>
+    <% logger.debug "Not cached" %>
+  <% end %>
+<% end %>
 
 <% paginate @users%>
 
-<h2>Add user:</h2>
-<%= render "users/form" %>
-
+  <h2>Add user:</h2>
+    <%= render "users/form" %>
+    
 <h2>Comments:</h2>
 
 <%= paginate @comments %>
 
-<%= render @comments.includes(:user)%>
+<% @comments.includes(:user).each do |comment| %>
+  <% cache comment do %>
+    <%= render comment %>
+    <% logger.debug "Not cached" %>
+  <% end %>
+<% end %>
 
 <% paginate @comments%>
+  <%= link_to 'Edit', edit_poll_path(@poll) %> |
+  <%= link_to 'Back', polls_path %>
 
-<%= link_to 'Edit', edit_poll_path(@poll) %> |
-<%= link_to 'Back', polls_path %>
+<% end %>

@@ -14,7 +14,8 @@ class TimeFramesController < ApplicationController
               format.json { render json: @time_frame.errors }
             end
           end
-
+        @poll.touch
+        @user.touch
     end
 
     def time_frame_params
