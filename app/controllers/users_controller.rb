@@ -27,6 +27,7 @@ class UsersController < ApplicationController
         format.json { render json: @user.errors }
       end
     end
+    @poll.touch
   end
 
   def user_params

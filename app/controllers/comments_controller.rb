@@ -14,6 +14,8 @@ class CommentsController < ApplicationController
               format.json { render json: @comment.errors }
             end
           end
+        @poll.touch
+        @user.touch
     end
 
     def comment_params
